@@ -5,6 +5,7 @@ import dev.pasq.terra_madre.entity.CartItem;
 import dev.pasq.terra_madre.entity.ShoppingCart;
 import dev.pasq.terra_madre.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,5 +27,13 @@ public class ShoppingCartController {
                                                   @RequestParam Integer quantity){
         CartItem item = shoppingCartService.addItemToCart(cartId,productId, quantity);
         return ResponseEntity.ok(item);
+    }
+
+    @DeleteMapping("/delete/{item_id}")
+    public ResponseEntity<String> deleteItemFromCart(@PathVariable("item_id") Integer itemId,
+                                                     @RequestParam Integer cartId,
+                                                     @RequestParam Integer productID){
+        shoppingCartService.removeItemFromCart(itemId, cartId, productID);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Item deleted");
     }
 }

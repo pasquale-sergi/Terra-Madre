@@ -4,9 +4,7 @@ import dev.pasq.terra_madre.entity.CartItem;
 import dev.pasq.terra_madre.entity.Product;
 import dev.pasq.terra_madre.entity.ShoppingCart;
 import dev.pasq.terra_madre.repository.CartItemRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +26,12 @@ public class CartUtilities {
                 .filter(item -> item.getProduct().equals(newItem.getProduct()))
                 .findFirst()
                 .ifPresent(existingItem -> existingItem.setQuantity(newItem.getQuantity()));
+    }
+
+    public void updateQuantityWhenItemRemoved(ShoppingCart cart, Product product) {
+        cart.getCartItems().stream()
+                .filter(item -> item.getProduct().equals(product))
+                .findFirst()
+                .ifPresent(existingItem -> existingItem.setQuantity(existingItem.getQuantity() - 1));
     }
 }

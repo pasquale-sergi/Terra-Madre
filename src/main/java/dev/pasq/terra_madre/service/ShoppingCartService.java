@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -66,6 +67,36 @@ public class ShoppingCartService {
 
         shoppingCartRepository.save(cart);
         return item;
+    }
+
+    public void removeItemFromCart(Integer itemId, Integer cartId, Integer productId){
+        ShoppingCart cart = getOrCreateCart(cartId);
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if(optionalProduct.isEmpty()){
+            throw new RuntimeException("Product not found");
+        }
+        Product product = optionalProduct.get();
+
+        //find the cart item
+        CartItem cartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().equals(product))
+                .findFirst()
+                .orElseThrow(()->new RuntimeException("Item not found in the cart"));
+
+
+        if(cartItem.getQuantity()>1){
+            cartUtilities.updateQuantityWhenItemRemoved(cart, product);
+            cartItemRepository.save(cartItem);
+        }else if(cartItem.getQuantity()==1){
+            cartItemRepository.deleteById(itemId);
+            cart.getCartItems().remove(cartItem);
+        }else{
+            throw new RuntimeException("Some kinda issue with the quantity for deleting item");
+        }
+
+        //save the cart
+        shoppingCartRepository.save(cart);
     }
 
 
