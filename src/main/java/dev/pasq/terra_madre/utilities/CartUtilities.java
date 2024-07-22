@@ -3,13 +3,24 @@ package dev.pasq.terra_madre.utilities;
 import dev.pasq.terra_madre.entity.CartItem;
 import dev.pasq.terra_madre.entity.Product;
 import dev.pasq.terra_madre.entity.ShoppingCart;
+import dev.pasq.terra_madre.repository.CartItemRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
+@Component
 public class CartUtilities {
+    @Autowired
+    private CartItemRepository cartItemRepository;
     public int getExistingQuantity(ShoppingCart cart, Product product) {
-        return cart.getCartItems().stream()
-                .filter(item -> item.getProduct().equals(product))
-                .mapToInt(CartItem::getQuantity)
-                .sum();
+        Optional<CartItem> cartItemOptional = cart.getCartItems().stream()
+            .filter(item -> item.getProduct().getId().equals(product.getId()))
+            .findFirst();
+        return cartItemOptional.map(CartItem::getQuantity).orElse(0);
     }
 
     public void updateExistingCartItem(ShoppingCart cart, CartItem newItem) {

@@ -1,20 +1,20 @@
 package dev.pasq.terra_madre.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = "cartItems")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="carts")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,8 @@ public class ShoppingCart {
     @Column(nullable = false, name="user_id")
     private Integer userId;
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItem> cartItems = new HashSet<>();
+    @JsonManagedReference
+    private List<CartItem> cartItems=new ArrayList<>();
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,5 +40,18 @@ public class ShoppingCart {
         updatedAt = new Date();
     }
 
+    public void addItemToList(CartItem item){
+        this.cartItems.add(item);
+        item.setShoppingCart(this);
+    }
 
+    @Override
+    public String toString() {
+        return "ShoppingCart{" +
+                "cartId=" + cartId +
+                ", userId=" + userId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

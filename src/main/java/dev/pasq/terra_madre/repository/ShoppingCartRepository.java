@@ -1,5 +1,6 @@
 package dev.pasq.terra_madre.repository;
 
+import dev.pasq.terra_madre.entity.Product;
 import dev.pasq.terra_madre.entity.ShoppingCart;
 import org.springframework.data.jpa.repository.JpaRepository;
 

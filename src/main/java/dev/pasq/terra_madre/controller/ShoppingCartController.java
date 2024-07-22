@@ -22,8 +22,9 @@ public class ShoppingCartController {
     }
     @PostMapping("/{cart_id}/items")
     public ResponseEntity<CartItem> addItemToCart(@PathVariable("cart_id") Integer cartId,
-                                                  @RequestBody CartItemAddingDto request){
-        CartItem item = shoppingCartService.addItemToCart(cartId, request.getProductId(), request.getQuantity(), request.getPrice());
+                                                  @RequestParam Integer productId,
+                                                  @RequestParam Integer quantity){
+        CartItem item = shoppingCartService.addItemToCart(cartId,productId, quantity);
         return ResponseEntity.ok(item);
     }
 }
