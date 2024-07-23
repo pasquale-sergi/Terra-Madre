@@ -24,6 +24,7 @@ public class CartItem {
     private Double price;
 
     private Integer quantity;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="product_id", nullable = false)
     private Product product;

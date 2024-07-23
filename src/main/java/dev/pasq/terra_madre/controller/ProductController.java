@@ -70,4 +70,12 @@ public class ProductController {
         List<Product> products = productService.getProductsByCategory(decodedName);
         return ResponseEntity.ok(products);
     }
+
+    @DeleteMapping("/delete/{product_id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable("product_id") Integer productId){
+        productService.removeProduct(productId);
+        return ResponseEntity.ok("Product removed");
+    }
+
+
 }
