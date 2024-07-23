@@ -54,4 +54,8 @@ public class ShoppingCart {
                 ", updatedAt=" + updatedAt +
                 '}';
     }
+
+    public double calculateTotal(){
+        return cartItems.stream().mapToDouble(item -> item.getPrice()*item.getQuantity()).sum();
+    }
 }

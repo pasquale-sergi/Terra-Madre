@@ -44,4 +44,16 @@ public class ProductService {
             throw new RuntimeException();
         }
     }
+
+    public List<Product> getProductsByCategory(String category){
+        return productRepository.findByCategory(category);
+    }
+
+    public List<Product> getProductsSortedByPriceAsc(){
+        return productRepository.findAllByOrderByPriceAsc();
+    }
+    public List<Product> getProductsSortedByPriceDesc(){
+        return productRepository.findAllByOrderByPriceDesc();
+    }
+
 }

@@ -51,4 +51,23 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Having issue adding the product");
         }
     }
+
+    @GetMapping("/filter/price/asc")
+    public ResponseEntity<List<Product>> getProductsByPriceAsc(){
+        List<Product> products = productService.getProductsSortedByPriceAsc();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/filter/price/desc")
+    public ResponseEntity<List<Product>> getProductsByPriceDesc(){
+        List<Product> products = productService.getProductsSortedByPriceDesc();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/filter/category/{category}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable("category") String categoryName){
+        String decodedName = URLDecoder.decode(categoryName, StandardCharsets.UTF_8);
+        List<Product> products = productService.getProductsByCategory(decodedName);
+        return ResponseEntity.ok(products);
+    }
 }
